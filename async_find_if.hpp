@@ -38,7 +38,7 @@ namespace eecs390
     {
       Iterator next = cur + count_per_task;
       results.push_back(std::async(
-          std::launch::async, eecs390::find_if, cur, next, pred));
+          std::launch::async, find_if<Iterator, Predicate>, cur, next, pred));
       cur = next;
     }
     // 2) check results:
