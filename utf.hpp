@@ -42,6 +42,11 @@ public:
   // EFFECTS: Returns a pointer to the singleton instance of this class.
   static UTFTestSuite *get()
   {
+    // MY CODE:
+    if (test_suite == nullptr)
+    {
+      test_suite = new UTFTestSuite();
+    }
     return test_suite;
   }
 
@@ -125,7 +130,18 @@ UTFTestCase::UTFTestCase(const std::string &name) : name(name)
 // 2) Create an instance of the derived class.
 // 3) Define the run() method of the derived class, using the body
 //    that follows the TEST(...) invocation.
-#define TEST(name) // replace with your code
+// MY CODE:
+#define TEST(name)                    \
+  class UTFTest : public UTFTestCase  \
+  {                                   \
+  public:                             \
+    UTFTest(const std::string &name)  \
+    {                                 \
+      UTFTestCase::UTFTestCase(name); \
+    }                                 \
+    void run();                       \
+  };                                  \
+  UTFTest testcase;
 
 // Defines the main() function for the test file.
 #define TEST_MAIN()                                 \
