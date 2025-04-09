@@ -131,17 +131,19 @@ UTFTestCase::UTFTestCase(const std::string &name) : name(name)
 // 3) Define the run() method of the derived class, using the body
 //    that follows the TEST(...) invocation.
 // MY CODE:
-#define TEST(name)                    \
-  class UTFTest : public UTFTestCase  \
-  {                                   \
-  public:                             \
-    UTFTest(const std::string &name)  \
-    {                                 \
-      UTFTestCase::UTFTestCase(name); \
-    }                                 \
-    void run();                       \
-  };                                  \
-  UTFTest testcase;
+#define TEST(name)                              \
+  class name : public UTFTestCase               \
+  {                                             \
+  public:                                       \
+    name()                                      \
+    {                                           \
+      UTFTestCase::UTFTestCase(#name);          \
+      UTFTestSuite::get()->register_test(this); \
+    }                                           \
+    void run() override;                        \
+  } name##_instance;                            \
+  name testcase;                                \
+  void name::run()
 
 // Defines the main() function for the test file.
 #define TEST_MAIN()                                 \
@@ -158,7 +160,8 @@ UTFTestCase::UTFTestCase(const std::string &name) : name(name)
 // UTFFailure if it is not. See utf_test.out.correct for the format of
 // message that should be passed to the UTFFailure constructor.
 // diagnostic is the actual text of the assertion.
-#define UTF_CHECK(value, diagnostic) // replace with your code
+#define UTF_CHECK(value, diagnostic) \
+  value ? value : (throw UTFFailure("error"))
 
 #define ASSERT_TRUE(expr) \
   UTF_CHECK(expr, "ASSERT_TRUE(" #expr ")")
